@@ -8,5 +8,4 @@ const connectDB = (url) => {
     useFindAndModify: false,
   });
 };
-
 module.exports = connectDB;
