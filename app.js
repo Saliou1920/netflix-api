@@ -1,20 +1,24 @@
 require("dotenv").config();
 require("express-async-errors");
 
-const express = require("express");
-
 // connect to the database
 const connectDB = require("./db/connect");
+const authenticateUser = require("./middleware/authentification");
 
+const express = require("express");
 const app = express();
 
-const port = process.env.PORT || 3000;
+const authRoute = require("./routes/auth");
 
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.status(200).send("Hello World!");
 });
+
+app.use("/api/v1/auth", authRoute);
+
+const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
