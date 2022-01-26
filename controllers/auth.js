@@ -8,7 +8,7 @@ const register = async (req, res) => {
   if (user) {
     throw new BadRequestError("User already exists");
   }
-  const newUser = await User.create({ name, email, password });
+  const newUser = await User.create(req.body);
   const token = newUser.createToken();
   res.status(StatusCodes.CREATED).json({ user: { name: newUser.name }, token });
 };
@@ -24,10 +24,10 @@ const login = async (req, res) => {
   }
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    throw new UnauthenticatedError("Invalid email or password");
+    throw new UnauthenticatedError("Invalid Password");
   }
   const token = user.createToken();
-  res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
+  res.status(StatusCodes.OK).json({ user: { user }, token });
 };
 
 module.exports = {
