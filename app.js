@@ -10,6 +10,7 @@ const app = express();
 
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
+const movieRoute = require("./routes/movie");
 
 app.use(express.json());
 
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", authenticateUser, userRoute);
+app.use("/api/v1/movies", authenticateUser, movieRoute);
 
 const port = process.env.PORT || 3000;
 

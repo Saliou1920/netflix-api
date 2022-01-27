@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const { BadRequestError } = require("../errors/index");
-const jwt = require("jsonwebtoken");
 const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcryptjs");
 
@@ -32,8 +31,12 @@ const deleteUser = async (req, res) => {
   if (userId.toString() !== id && !req.user.isAdmin) {
     throw new BadRequestError("You can't delete other users");
   }
-  const deletedUser = await User.findByIdAndDelete(id);
-  res.status(StatusCodes.OK).json({ user: deletedUser });
+  try {
+    await User.findByIdAndDelete(id);
+    res.status(StatusCodes.OK).json({ message: "User deleted" });
+  } catch (err) {
+    throw new BadRequestError("User not found");
+  }
 };
 
 const getAllUsers = async (req, res) => {
@@ -53,9 +56,40 @@ const getUserById = async (req, res) => {
   const user = await User.findById(req.params.id);
   res.status(StatusCodes.OK).json({ user });
 };
+
+// users statistics
+const getUserStats = async (req, res) => {
+  // total number of users per month
+  try {
+    const users = await User.aggregate([
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: { month: "$month" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+    res.status(StatusCodes.OK).json({ users });
+  } catch (err) {
+    throw new BadRequestError("User not found");
+  }
+};
+
 module.exports = {
   updateUser,
   deleteUser,
   getAllUsers,
   getUserById,
+  getUserStats,
 };

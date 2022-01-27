@@ -5,9 +5,11 @@ const {
   deleteUser,
   getAllUsers,
   getUserById,
+  getUserStats,
 } = require("../controllers/user");
 
-router.route("/:id").get(getUserById).patch(updateUser).delete(deleteUser);
+router.route("/find/:id").get(getUserById).patch(updateUser).delete(deleteUser);
 router.route("/").get(getAllUsers);
+router.route("/stats").get(getUserStats);
 
 module.exports = router;
