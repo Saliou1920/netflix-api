@@ -11,16 +11,14 @@ const app = express();
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const movieRoute = require("./routes/movie");
+const listRoute = require("./routes/list");
 
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.status(200).send("Hello World!");
-});
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", authenticateUser, userRoute);
 app.use("/api/v1/movies", authenticateUser, movieRoute);
+app.use("/api/v1/lists", authenticateUser, listRoute);
 
 const port = process.env.PORT || 3000;
 
