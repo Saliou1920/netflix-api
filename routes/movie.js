@@ -7,10 +7,11 @@ const {
   deleteMovie,
   getMovieById,
   randomMovie,
+  getAllMovies,
 } = require("../controllers/movie");
 
-router.route("/").post(createMovie);
-router.route("/:id").get(getMovieById).patch(updateMovie).delete(deleteMovie);
 router.route("/random").get(randomMovie);
+router.route("/").post(createMovie).get(getAllMovies);
+router.route("/:id").get(getMovieById).patch(updateMovie).delete(deleteMovie);
 
 module.exports = router;

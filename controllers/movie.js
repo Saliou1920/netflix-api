@@ -59,10 +59,19 @@ const randomMovie = async (req, res) => {
   res.status(StatusCodes.OK).json({ movie });
 };
 
+const getAllMovies = async (req, res) => {
+  if (!req.user.isAdmin) {
+    throw new badRequest("You are not admin");
+  }
+  const query = req.query.limit;
+  const movies = query ? await Movie.find().limit(query) : await Movie.find();
+  res.status(StatusCodes.OK).json({ movies });
+};
 module.exports = {
   createMovie,
   updateMovie,
   deleteMovie,
   getMovieById,
   randomMovie,
+  getAllMovies,
 };
