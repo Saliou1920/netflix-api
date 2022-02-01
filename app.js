@@ -5,6 +5,7 @@ require("express-async-errors");
 const connectDB = require("./db/connect");
 const authenticateUser = require("./middleware/authentification");
 
+const cors = require("cors");
 const express = require("express");
 const app = express();
 
@@ -14,13 +15,18 @@ const movieRoute = require("./routes/movie");
 const listRoute = require("./routes/list");
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", authenticateUser, userRoute);
 app.use("/api/v1/movies", authenticateUser, movieRoute);
 app.use("/api/v1/lists", authenticateUser, listRoute);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {
